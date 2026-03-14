@@ -1,130 +1,166 @@
 ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discord Support Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
 
-<style>
-body{
-    font-family: Arial, sans-serif;
-    background:#1e1e2f;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+    .container {
+      background: #2a2a40;
+      padding: 25px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
 
-.container{
-    background:#2a2a40;
-    padding:25px;
-    border-radius:10px;
-    width:350px;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-h2{
-    text-align:center;
-}
+    label {
+      display: block;
+      margin-bottom: 6px;
+      margin-top: 12px;
+      font-weight: bold;
+    }
 
-input, textarea{
-    width:100%;
-    padding:10px;
-    margin-top:8px;
-    margin-bottom:15px;
-    border:none;
-    border-radius:5px;
-}
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
 
-button{
-    width:100%;
-    padding:10px;
-    background:#5865F2;
-    border:none;
-    color:white;
-    font-size:16px;
-    border-radius:5px;
-    cursor:pointer;
-}
+    textarea {
+      resize: vertical;
+    }
 
-button:hover{
-    background:#4752c4;
-}
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 18px;
+      background: #5865F2;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-.success{
-    display:none;
-    text-align:center;
-    margin-top:10px;
-    color:#4CAF50;
-}
-</style>
+    button:hover {
+      background: #4752c4;
+    }
+
+    .success,
+    .error {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .success {
+      color: #57f287;
+    }
+
+    .error {
+      color: #ed4245;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <h2>Support Request</h2>
 
-<div class="container">
-<h2>Support Request</h2>
+    <form id="supportForm">
+      <label for="username">Discord Username</label>
+      <input type="text" id="username" required />
 
-<form id="supportForm">
+      <label for="discordId">Discord ID</label>
+      <input type="text" id="discordId" required />
 
-<label>Discord Username</label>
-<input type="text" id="username" required>
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" required />
 
-<label>Discord ID</label>
-<input type="text" id="discordId" required>
+      <label for="issue">Describe the Issue</label>
+      <textarea id="issue" rows="5" required></textarea>
 
-<label>Subject</label>
-<input type="text" id="subject" required>
+      <button type="submit">Submit Ticket</button>
 
-<label>Describe the Issue</label>
-<textarea id="issue" rows="4" required></textarea>
+      <div class="success" id="successMsg">Support request sent successfully.</div>
+      <div class="error" id="errorMsg">Failed to send support request.</div>
+    </form>
+  </div>
 
-<button type="submit">Submit Ticket</button>
+  <script>
+    document.getElementById("supportForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-<div class="success" id="successMsg">Support request sent!</div>
+      const username = document.getElementById("username").value.trim();
+      const discordId = document.getElementById("discordId").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const issue = document.getElementById("issue").value.trim();
 
-</form>
-</div>
+      const webhookURL = "https://discord.com/api/webhooks/1482373191879102464/tOX4JSyjMtX-hjmr6mmTgE9tPwZL_2l9ubaJx7Wkd1Ba9KnqSTWLEHEcau3-DxXDnJU";
 
-<script>
-
-document.getElementById("supportForm").addEventListener("submit", async function(e){
-    e.preventDefault();
-
-    const username = document.getElementById("username").value;
-    const discordId = document.getElementById("discordId").value;
-    const subject = document.getElementById("subject").value;
-    const issue = document.getElementById("issue").value;
-
-    const webhookURL = "YOUR_WEBHOOK_HERE";
-
-    const payload = {
-        embeds: [{
+      const payload = {
+        embeds: [
+          {
             title: "New Support Ticket",
-            color: 5814783,
+            color: 5763719,
             fields: [
-                { name: "Discord Username", value: username, inline: true },
-                { name: "Discord ID", value: discordId, inline: true },
-                { name: "Subject", value: subject, inline: false },
-                { name: "Issue", value: issue, inline: false }
+              { name: "Discord Username", value: username || "Not provided", inline: true },
+              { name: "Discord ID", value: discordId || "Not provided", inline: true },
+              { name: "Subject", value: subject || "No subject", inline: false },
+              { name: "Describe the Issue", value: issue || "No issue provided", inline: false }
             ],
-            timestamp: new Date()
-        }]
-    };
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
 
-    await fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      const successMsg = document.getElementById("successMsg");
+      const errorMsg = document.getElementById("errorMsg");
+
+      successMsg.style.display = "none";
+      errorMsg.style.display = "none";
+
+      try {
+        const response = await fetch(webhookURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          successMsg.style.display = "block";
+          document.getElementById("supportForm").reset();
+        } else {
+          errorMsg.style.display = "block";
+        }
+      } catch (error) {
+        errorMsg.style.display = "block";
+      }
     });
-
-    document.getElementById("successMsg").style.display = "block";
-    document.getElementById("supportForm").reset();
-});
-
-</script>
-
+  </script>
 </body>
 </html>
