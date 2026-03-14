@@ -20,7 +20,7 @@
         }
 
         .container {
-            width: 420px;
+            width: 430px;
             background: #ffffff;
             padding: 30px;
             border-radius: 14px;
@@ -62,7 +62,26 @@
             outline: none;
         }
 
-        button {
+        #verifyBtn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: #ffb347;
+            color: #222;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #verifyBtn.verified {
+            background: #43b581;
+            color: white;
+        }
+
+        button[type="submit"] {
             width: 100%;
             padding: 14px;
             margin-top: 20px;
@@ -76,8 +95,9 @@
             transition: 0.2s;
         }
 
-        button:hover {
-            background: #4752C4;
+        button[type="submit"]:disabled {
+            background: #999;
+            cursor: not-allowed;
         }
 
         #responseMessage {
@@ -106,17 +126,51 @@
         <label>Describe the Issue</label>
         <textarea id="issue" rows="5" placeholder="Tell us what’s going on..." required></textarea>
 
-        <button type="submit">Submit Ticket</button>
+        <button id="verifyBtn" type="button">Hold 2–4 Seconds to Verify Human</button>
+
+        <button type="submit" id="submitBtn" disabled>Submit Ticket</button>
     </form>
 
     <p id="responseMessage"></p>
 </div>
 
 <script>
+let holdTimer;
+let holdTime = 0;
+let verified = false;
+
+const verifyBtn = document.getElementById("verifyBtn");
+const submitBtn = document.getElementById("submitBtn");
+
+verifyBtn.addEventListener("mousedown", () => {
+    holdTime = 0;
+    holdTimer = setInterval(() => {
+        holdTime++;
+
+        if (holdTime >= 2 && holdTime <= 4) {
+            verified = true;
+            verifyBtn.classList.add("verified");
+            verifyBtn.textContent = "Verified ✓";
+            submitBtn.disabled = false;
+            clearInterval(holdTimer);
+        }
+    }, 1000);
+});
+
+verifyBtn.addEventListener("mouseup", () => {
+    clearInterval(holdTimer);
+});
+
 document.getElementById("supportForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const webhookURL = "https://discord.com/api/webhooks/1482373191879102464/tOX4JSyjMtX-hjmr6mmTgqE9tPwZL_2l9ubaJx7Wkd1Ba9KnqSTWLEHEcau3-DxXDnJU";
+    if (!verified) {
+        document.getElementById("responseMessage").innerText = "Please verify you are human first.";
+        document.getElementById("responseMessage").style.color = "red";
+        return;
+    }
+
+    const webhookURL = "https://discord.com/api/webhooks/1482377942053949591/hoYKlEzsOZu8yz5Yz8YntJ9QIfWb43eFGA6v9c4v0CLCFGrMH1Tug65CJBtwHJ1kozbi";
 
     const username = document.getElementById("username").value;
     const userid = document.getElementById("userid").value;
@@ -124,7 +178,8 @@ document.getElementById("supportForm").addEventListener("submit", function(e) {
     const issue = document.getElementById("issue").value;
 
     const message = {
-        content: "**New Support Request Submitted**",
+        content: "<@&1482333430334099476> **New Support Request Submitted**",
+        allowed_mentions: { roles: ["1482333430334099476"] },
         embeds: [
             {
                 title: subject,
@@ -148,6 +203,10 @@ document.getElementById("supportForm").addEventListener("submit", function(e) {
         document.getElementById("responseMessage").innerText = "Your support request has been submitted!";
         document.getElementById("responseMessage").style.color = "green";
         document.getElementById("supportForm").reset();
+        submitBtn.disabled = true;
+        verifyBtn.classList.remove("verified");
+        verifyBtn.textContent = "Hold 2–4 Seconds to Verify Human";
+        verified = false;
     })
     .catch(() => {
         document.getElementById("responseMessage").innerText = "There was an error submitting your request.";
