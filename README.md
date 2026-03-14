@@ -1,10 +1,11 @@
 ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 
 
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Support Request</title>
+    <title>Support Verification</title>
 
     <style>
         body {
@@ -20,7 +21,7 @@
         }
 
         .container {
-            width: 430px;
+            width: 420px;
             background: #ffffff;
             padding: 30px;
             border-radius: 14px;
@@ -46,7 +47,7 @@
             display: block;
         }
 
-        input, textarea {
+        input {
             width: 100%;
             padding: 12px;
             margin-top: 6px;
@@ -56,32 +57,13 @@
             transition: 0.2s;
         }
 
-        input:focus, textarea:focus {
+        input:focus {
             border-color: #5865F2;
             box-shadow: 0 0 5px rgba(88,101,242,0.4);
             outline: none;
         }
 
         #verifyBtn {
-            width: 100%;
-            padding: 14px;
-            margin-top: 20px;
-            background: #ffb347;
-            color: #222;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        #verifyBtn.verified {
-            background: #43b581;
-            color: white;
-        }
-
-        button[type="submit"] {
             width: 100%;
             padding: 14px;
             margin-top: 20px;
@@ -95,9 +77,8 @@
             transition: 0.2s;
         }
 
-        button[type="submit"]:disabled {
-            background: #999;
-            cursor: not-allowed;
+        #verifyBtn:hover {
+            background: #4752C4;
         }
 
         #responseMessage {
@@ -111,87 +92,31 @@
 <body>
 
 <div class="container">
-    <h2>Submit a Support Ticket</h2>
+    <h2>Support Verification</h2>
 
-    <form id="supportForm">
-        <label>Discord Username</label>
-        <input type="text" id="username" placeholder="e.g. CoolUser#1234" required>
+    <label>Please enter your username</label>
+    <input type="text" id="username" placeholder="e.g. CoolUser#1234" required>
 
-        <label>Discord ID</label>
-        <input type="text" id="userid" placeholder="e.g. 123456789012345678" required>
-
-        <label>Subject</label>
-        <input type="text" id="subject" placeholder="Short summary of your issue" required>
-
-        <label>Describe the Issue</label>
-        <textarea id="issue" rows="5" placeholder="Tell us what’s going on..." required></textarea>
-
-        <button id="verifyBtn" type="button">Hold 2–4 Seconds to Verify Human</button>
-
-        <button type="submit" id="submitBtn" disabled>Submit Ticket</button>
-    </form>
+    <button id="verifyBtn">Verify</button>
 
     <p id="responseMessage"></p>
 </div>
 
 <script>
-let holdTimer;
-let holdTime = 0;
-let verified = false;
+document.getElementById("verifyBtn").addEventListener("click", function() {
 
-const verifyBtn = document.getElementById("verifyBtn");
-const submitBtn = document.getElementById("submitBtn");
+    const username = document.getElementById("username").value.trim();
 
-verifyBtn.addEventListener("mousedown", () => {
-    holdTime = 0;
-    holdTimer = setInterval(() => {
-        holdTime++;
-
-        if (holdTime >= 2 && holdTime <= 4) {
-            verified = true;
-            verifyBtn.classList.add("verified");
-            verifyBtn.textContent = "Verified ✓";
-            submitBtn.disabled = false;
-            clearInterval(holdTimer);
-        }
-    }, 1000);
-});
-
-verifyBtn.addEventListener("mouseup", () => {
-    clearInterval(holdTimer);
-});
-
-document.getElementById("supportForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    if (!verified) {
-        document.getElementById("responseMessage").innerText = "Please verify you are human first.";
+    if (username === "") {
+        document.getElementById("responseMessage").innerText = "Please enter your username first.";
         document.getElementById("responseMessage").style.color = "red";
         return;
     }
 
     const webhookURL = "https://discord.com/api/webhooks/1482377942053949591/hoYKlEzsOZu8yz5Yz8YntJ9QIfWb43eFGA6v9c4v0CLCFGrMH1Tug65CJBtwHJ1kozbi";
 
-    const username = document.getElementById("username").value;
-    const userid = document.getElementById("userid").value;
-    const subject = document.getElementById("subject").value;
-    const issue = document.getElementById("issue").value;
-
     const message = {
-        content: "<@&1482333430334099476> **New Support Request Submitted**",
-        allowed_mentions: { roles: ["1482333430334099476"] },
-        embeds: [
-            {
-                title: subject,
-                color: 5814783,
-                fields: [
-                    { name: "Discord Username", value: username },
-                    { name: "Discord ID", value: userid },
-                    { name: "Issue Description", value: issue }
-                ],
-                timestamp: new Date()
-            }
-        ]
+        content: `**[User has entered support website and verified]**\nUsername: ${username}`
     };
 
     fetch(webhookURL, {
@@ -200,16 +125,11 @@ document.getElementById("supportForm").addEventListener("submit", function(e) {
         body: JSON.stringify(message)
     })
     .then(() => {
-        document.getElementById("responseMessage").innerText = "Your support request has been submitted!";
+        document.getElementById("responseMessage").innerText = "Verification complete!";
         document.getElementById("responseMessage").style.color = "green";
-        document.getElementById("supportForm").reset();
-        submitBtn.disabled = true;
-        verifyBtn.classList.remove("verified");
-        verifyBtn.textContent = "Hold 2–4 Seconds to Verify Human";
-        verified = false;
     })
     .catch(() => {
-        document.getElementById("responseMessage").innerText = "There was an error submitting your request.";
+        document.getElementById("responseMessage").innerText = "Error sending verification.";
         document.getElementById("responseMessage").style.color = "red";
     });
 });
