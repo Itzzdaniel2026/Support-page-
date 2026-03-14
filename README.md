@@ -1,5 +1,6 @@
 ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
 
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -127,7 +128,7 @@ document.getElementById("verifyBtn").addEventListener("click", function() {
         document.getElementById("responseMessage").style.color = "green";
 
         setTimeout(() => {
-            window.location.href = "support.html"; // ← CHANGE THIS TO YOUR SUPPORT PAGE URL
+            window.location.href = "https://itzzdaniel2026.github.io/Support-page-02/";
         }, 1500);
     })
     .catch(() => {
