@@ -4,61 +4,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Support Form</title>
+    <title>Support Request</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", Arial, sans-serif;
+            background: linear-gradient(135deg, #5865F2, #3A3FCE);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
         }
+
         .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 420px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            animation: fadeIn 0.6s ease;
         }
-        input, textarea, button {
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #222;
+            font-weight: 600;
+        }
+
+        label {
+            font-weight: 600;
+            margin-top: 12px;
+            display: block;
+        }
+
+        input, textarea {
             width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
             border: 1px solid #ccc;
+            font-size: 15px;
+            transition: 0.2s;
         }
+
+        input:focus, textarea:focus {
+            border-color: #5865F2;
+            box-shadow: 0 0 5px rgba(88,101,242,0.4);
+            outline: none;
+        }
+
         button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
             background: #5865F2;
             color: white;
-            cursor: pointer;
             border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
         }
+
         button:hover {
             background: #4752C4;
         }
+
+        #responseMessage {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
-    <h2>Support Request</h2>
+    <h2>Submit a Support Ticket</h2>
 
     <form id="supportForm">
         <label>Discord Username</label>
-        <input type="text" id="username" required>
+        <input type="text" id="username" placeholder="e.g. CoolUser#1234" required>
 
         <label>Discord ID</label>
-        <input type="text" id="userid" required>
+        <input type="text" id="userid" placeholder="e.g. 123456789012345678" required>
 
         <label>Subject</label>
-        <input type="text" id="subject" required>
+        <input type="text" id="subject" placeholder="Short summary of your issue" required>
 
         <label>Describe the Issue</label>
-        <textarea id="issue" rows="5" required></textarea>
+        <textarea id="issue" rows="5" placeholder="Tell us what’s going on..." required></textarea>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Submit Ticket</button>
     </form>
 
-    <p id="responseMessage" style="margin-top:15px;"></p>
+    <p id="responseMessage"></p>
 </div>
 
 <script>
@@ -79,9 +130,9 @@ document.getElementById("supportForm").addEventListener("submit", function(e) {
                 title: subject,
                 color: 5814783,
                 fields: [
-                    { name: "Discord Username", value: username, inline: false },
-                    { name: "Discord ID", value: userid, inline: false },
-                    { name: "Issue Description", value: issue, inline: false }
+                    { name: "Discord Username", value: username },
+                    { name: "Discord ID", value: userid },
+                    { name: "Issue Description", value: issue }
                 ],
                 timestamp: new Date()
             }
@@ -93,12 +144,14 @@ document.getElementById("supportForm").addEventListener("submit", function(e) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(message)
     })
-    .then(response => {
-        document.getElementById("responseMessage").innerText = "Your support request has been submitted.";
+    .then(() => {
+        document.getElementById("responseMessage").innerText = "Your support request has been submitted!";
+        document.getElementById("responseMessage").style.color = "green";
         document.getElementById("supportForm").reset();
     })
-    .catch(error => {
+    .catch(() => {
         document.getElementById("responseMessage").innerText = "There was an error submitting your request.";
+        document.getElementById("responseMessage").style.color = "red";
     });
 });
 </script>
